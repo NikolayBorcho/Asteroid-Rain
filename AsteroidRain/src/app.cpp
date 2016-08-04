@@ -49,6 +49,9 @@ void App::Init()
 
 	// create the main window
 	window.create(sf::VideoMode(1024, 576), "Asteroid Rain");
+
+	// set initial state
+	game_state = GAME_INTRO;
 }
 
 
@@ -62,7 +65,19 @@ void App::End()
 // Game Logic
 void App::Update(float delta_time)
 {
-		
+	switch (game_state)
+	{
+	case GAME_INTRO:
+
+		break;
+	case GAME_PLAY:
+
+		break;
+
+	case GAME_OVER:
+
+		break;
+	}
 }
 
 
@@ -70,8 +85,21 @@ void App::Update(float delta_time)
 void App::Render()
 {
     window.clear(sf::Color(255,255,255,255));
-	// render the scene
 
+	// render the scene according to state
+	switch (game_state)
+	{
+	case GAME_INTRO:
+
+		break;
+	case GAME_PLAY:
+
+		break;
+
+	case GAME_OVER:
+
+		break;
+	}
 
     window.display();
 }

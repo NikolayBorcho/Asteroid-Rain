@@ -10,6 +10,9 @@ public:
 	App();
 	void Run();
 private:
+	enum GAME_STATES {GAME_INTRO, GAME_PLAY, GAME_OVER};
+	GAME_STATES game_state;
+
 	void Init();
 	void Update(float delta_time);
 	void Render();
