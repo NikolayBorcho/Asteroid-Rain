@@ -2,32 +2,35 @@
 #define _APP_
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 
 // App class hadnling the game loop and all application objects
 class App
 {
 public:
 	App();
-	void Run();
+	void RunApp();
+	void CloseApp();
 private:
 	enum GAME_STATES {GAME_INTRO, GAME_PLAY, GAME_OVER};
-	GAME_STATES m_game_state;
+	GAME_STATES m_current_game_state;
 
 	// core
-	void Init();
-	void Update(double delta_time);
-	void Render();
-	void End();
+	void InitState();
+	void UpdateState(double delta_time);
+	void RenderState();
+	void ExitState();
+	void ChangeState(GAME_STATES new_game_state);
 
 	// collisions
 	bool MouseClickedSprite(sf::Sprite& sprite);
 
 	sf::Font m_font;
 	sf::RenderWindow m_window;
-	sf::Clock m_timer;
+	sf::Clock m_game_timer;
 	int m_score;
 	sf::Text m_score_text;
-	sf::Text m_timer_text;
+	sf::Text m_game_timer_text;
 	sf::Text m_lives_text;
 	sf::Text m_high_score_text;
 	sf::Text m_game_title_text;
@@ -40,6 +43,9 @@ private:
 	sf::Texture m_start_button_texture;
 	int m_fps;
 	sf::Text m_fps_text;
+
+	// asteroids
+	std::vector<sf::Sprite> asteroids;
 };
 
 #endif

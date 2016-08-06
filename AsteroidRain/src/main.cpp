@@ -10,5 +10,5 @@
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow)
 {
 	App game_app;
-	game_app.Run();
+	game_app.RunApp();
 }
