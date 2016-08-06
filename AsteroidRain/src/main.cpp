@@ -1,6 +1,6 @@
 // Asteroid Rain Game as defined by Mediatonic
 // Using the SFML C++ library
-// All other files in this project are written by Nikolay Panayotov
+// ...
 // 2016
 
 #include <windows.h>
