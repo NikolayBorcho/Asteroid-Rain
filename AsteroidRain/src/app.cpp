@@ -128,20 +128,29 @@ void App::InitState()
 		break;
 	case GAME_PLAY:
 		// timer
+		{
+		// player lives
+		m_lives = 5;
+		m_lives_text.setFont(m_font);
+		m_lives_text.setColor(sf::Color::Red);
+		m_lives_text.setPosition(10.f, m_window.getSize().y - 40.f);
+		m_lives_text.setString("Lives: ");
+		// current score
+		m_score = 0;
+		m_score_text.setFont(m_font);
+		m_score_text.setColor(sf::Color::Red);
+		m_score_text.setPosition(10.f, m_window.getSize().y - 80.f);
+		m_score_text.setString("Score: ");
+
+
 		m_game_timer.restart();
 		m_game_timer_text.setFont(m_font);
 		m_game_timer_text.setColor(sf::Color::Red);
 		m_game_timer_text.setPosition(m_window.getSize().x - 160.f, m_window.getSize().y - 40.f);
 		m_game_timer_text.setString("Time left: " + to_string(60,std::dec));
-		// player lives
-		m_lives = 5;
-		// current score
-		m_score = 0;
-		m_score_text.setFont(m_font);
-		m_score_text.setColor(sf::Color::Blue);
-		m_score_text.setPosition(10.f, m_window.getSize().y - 40.f);
-		m_score_text.setString("Score: ");
-
+		
+		m_asteroids.Init();
+		}
 		break;
 
 	case GAME_OVER:
@@ -163,10 +172,29 @@ void App::UpdateState(double delta_time)
 		}
 		break;
 	case GAME_PLAY:
-		m_game_timer_text.setString("Time left: " + to_string<int>(60 - m_game_timer.getElapsedTime().asSeconds(),std::dec));
-		if (m_game_timer.getElapsedTime().asSeconds() >= 60)
+		// stopwatch countdown
+		m_game_timer_text.setString("Time left: " + to_string<int>(10 - m_game_timer.getElapsedTime().asSeconds(),std::dec));
+		if (m_game_timer.getElapsedTime().asSeconds() >= 10)
 		{
 			ChangeState(GAME_INTRO);
+		}
+		
+		// itearate asteroids
+		m_asteroids.Update(delta_time);
+		for (std::vector<sf::Sprite>::iterator it = m_asteroids.m_asteroids.begin(); it != m_asteroids.m_asteroids.end(); /*++it*/)
+		{
+			if (MouseClickedSprite(*it))
+			{
+				it = m_asteroids.m_asteroids.erase(it);
+				m_score++;
+			}
+			else if (it->getPosition().y > m_window.getSize().y)
+			{
+				it = m_asteroids.m_asteroids.erase(it);
+				m_lives--;
+			}
+			else
+				it++;
 		}
 		break;
 
@@ -189,8 +217,13 @@ void App::RenderState()
 		m_window.draw(m_start_button);
 		break;
 	case GAME_PLAY:
-		m_window.draw(m_score_text);
+		m_asteroids.Render(&m_window);
 		m_window.draw(m_game_timer_text);
+		m_score_text.setString("Score: " + to_string<int>(m_score,std::dec));
+		m_window.draw(m_score_text);
+		m_lives_text.setString("Lives: " + to_string<int>(m_lives,std::dec));
+		m_window.draw(m_lives_text);
+
 		break;
 
 	case GAME_OVER:

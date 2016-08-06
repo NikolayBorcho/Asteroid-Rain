@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "asteroid.h"
 
 // App class hadnling the game loop and all application objects
 class App
@@ -28,16 +29,20 @@ private:
 	sf::Font m_font;
 	sf::RenderWindow m_window;
 	sf::Clock m_game_timer;
+	
+
+	int m_lives;
 	int m_score;
 	sf::Text m_score_text;
-	sf::Text m_game_timer_text;
 	sf::Text m_lives_text;
+
+	sf::Text m_game_timer_text;
 	sf::Text m_high_score_text;
 	sf::Text m_game_title_text;
 	sf::Text m_game_over_text;
 	sf::Text m_button_text;
+	
 	int m_high_score;
-	int m_lives;
 	bool m_mouse_clicked;
 	sf::Sprite m_start_button;
 	sf::Texture m_start_button_texture;
@@ -45,7 +50,7 @@ private:
 	sf::Text m_fps_text;
 
 	// asteroids
-	std::vector<sf::Sprite> asteroids;
+	Asteroid m_asteroids;
 };
 
 #endif
