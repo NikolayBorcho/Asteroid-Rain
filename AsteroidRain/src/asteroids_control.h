@@ -22,6 +22,7 @@ public:
 	void CleanUp();
 
 	void SplitAsteroid(Asteroid asteroid);
+	void CreateExplosion(sf::Vector2f position);
 
 	std::vector<Asteroid> m_asteroids;
 private:
@@ -41,6 +42,9 @@ private:
 	static const float M_SUPER_ASTEROID_MIN_SPEED;
 	static const float M_SUPER_ASTEROID_MAX_SPEED;
 	static const int M_ASTEROID_SPEED_LEVELS;
+	static const int M_PARTICLES_LIFE_TIME;
+	static const int M_NUM_PARTICLES_PER_EXPLOSION;
+	static const float M_PARTICLES_SPEED;
 };
 
 #endif

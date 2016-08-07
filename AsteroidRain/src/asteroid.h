@@ -11,19 +11,20 @@ class Asteroid : public sf::Sprite
 public:
 	Asteroid();
 
-	enum ASTEROID_TYPE {SMALL, SUPER};
+	enum ASTEROID_TYPE {SMALL, SUPER, PARTICLE};
 
 	bool isDead;
+	sf::Clock m_life_clock;
 
 	// getters and setters
 	void setType(ASTEROID_TYPE type) { m_type = type; }
 	ASTEROID_TYPE getType() { return m_type; }
-	void setSpeed(float speed) { m_speed = speed; }
-	float getSpeed() { return m_speed; }
-	
+	void setVelocity(sf::Vector2f velocity) { m_velocity = velocity; }
+	sf::Vector2f getVelocity() { return m_velocity; }
+
 private:
 	ASTEROID_TYPE m_type;
-	float m_speed;
+	sf::Vector2f m_velocity;
 };
 
 #endif

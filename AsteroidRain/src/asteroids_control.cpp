@@ -1,4 +1,5 @@
 #include "asteroids_control.h"
+#include <cmath>
 
 // Nikolay Panayotov, 2016
 
@@ -9,6 +10,9 @@ const float AsteroidsControl::M_SMALL_ASTEROID_MAX_SPEED = 0.9f;
 const float AsteroidsControl::M_SUPER_ASTEROID_MIN_SPEED = 0.05f;
 const float AsteroidsControl::M_SUPER_ASTEROID_MAX_SPEED = 0.5f;
 const int AsteroidsControl::M_ASTEROID_SPEED_LEVELS = 5;
+const int AsteroidsControl::M_PARTICLES_LIFE_TIME = 300;
+const int AsteroidsControl::M_NUM_PARTICLES_PER_EXPLOSION = 12;
+const float AsteroidsControl::M_PARTICLES_SPEED = 0.5f;
 
 AsteroidsControl::AsteroidsControl()
 {
@@ -64,7 +68,7 @@ void AsteroidsControl::Update(double delta_time)
 			asteroid.setTexture(m_small_asteroid_texture);
 			asteroid.setOrigin(asteroid.getLocalBounds().width/2, asteroid.getLocalBounds().height/2);
 			asteroid.setPosition(rand()%(m_window->getSize().x - int(asteroid.getLocalBounds().width)), -asteroid.getLocalBounds().height);	
-			asteroid.setSpeed(M_SMALL_ASTEROID_MIN_SPEED + (M_SMALL_ASTEROID_MAX_SPEED - M_SMALL_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS)) );
+			asteroid.setVelocity(sf::Vector2f(0.f, M_SMALL_ASTEROID_MIN_SPEED + (M_SMALL_ASTEROID_MAX_SPEED - M_SMALL_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS))) );
 		}
 		else
 		{
@@ -73,17 +77,23 @@ void AsteroidsControl::Update(double delta_time)
 			asteroid.setTexture(m_super_asteroid_texture);
 			asteroid.setOrigin(asteroid.getLocalBounds().width/2, asteroid.getLocalBounds().height/2);
 			asteroid.setPosition(rand()%(m_window->getSize().x - int(asteroid.getLocalBounds().width)), -asteroid.getLocalBounds().height);	
-			asteroid.setSpeed(M_SUPER_ASTEROID_MIN_SPEED + (M_SUPER_ASTEROID_MAX_SPEED - M_SUPER_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS)) );	
+			asteroid.setVelocity(sf::Vector2f(0.f, M_SUPER_ASTEROID_MIN_SPEED + (M_SUPER_ASTEROID_MAX_SPEED - M_SUPER_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS))) );	
 		}
 		m_asteroids.push_back(asteroid);
 		m_generator_timer.restart();
 	}
 
-	// move and rotate asteroids
+	// update properties of asteroids
 	for (std::vector<Asteroid>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); ++it)
 	{
-		it->move(0.f,it->getSpeed()*delta_time);
-		it->rotate(it->getSpeed()*delta_time);
+		// move and rotate asteroids
+		it->move(it->getVelocity().x*delta_time,it->getVelocity().y*delta_time);
+		it->rotate(it->getVelocity().y*delta_time);
+		// check if particle explosions are done
+		if ( (it->getType() == Asteroid::ASTEROID_TYPE::PARTICLE) && (it->m_life_clock.getElapsedTime() >= sf::milliseconds(M_PARTICLES_LIFE_TIME)) )
+		{
+			it->isDead = true;
+		}
 	}
 }
 
@@ -116,10 +126,32 @@ void AsteroidsControl::SplitAsteroid(Asteroid asteroid)
 	split_asteroid.setTexture(m_small_asteroid_texture);
 	split_asteroid.setOrigin(split_asteroid.getLocalBounds().width/2, split_asteroid.getLocalBounds().height/2);
 	split_asteroid.setPosition(asteroid.getPosition().x - split_asteroid.getLocalBounds().width/2, asteroid.getPosition().y);	
-	split_asteroid.setSpeed(0.1f + 0.1f*(rand()%5));
+	split_asteroid.setVelocity(sf::Vector2f(0.f, M_SMALL_ASTEROID_MIN_SPEED + (M_SMALL_ASTEROID_MAX_SPEED - M_SMALL_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS))) );
 	m_new_asteroids.push(split_asteroid);
 	// and a second one to the right side
-	split_asteroid.setPosition(asteroid.getPosition().x + split_asteroid.getLocalBounds().width/2, asteroid.getPosition().y);	
-	split_asteroid.setSpeed(0.1f + 0.1f*(rand()%5));
+	split_asteroid.setPosition(asteroid.getPosition().x + split_asteroid.getLocalBounds().width/2, asteroid.getPosition().y);
+	split_asteroid.setVelocity(sf::Vector2f(0.f, M_SMALL_ASTEROID_MIN_SPEED + (M_SMALL_ASTEROID_MAX_SPEED - M_SMALL_ASTEROID_MIN_SPEED) * ( (rand()%M_ASTEROID_SPEED_LEVELS) / float(M_ASTEROID_SPEED_LEVELS))) );
 	m_new_asteroids.push(split_asteroid);
+}
+
+
+//---
+void AsteroidsControl::CreateExplosion(sf::Vector2f position)
+{
+	// create an explosion paticle effect
+	Asteroid particle;
+	particle.setType(Asteroid::ASTEROID_TYPE::PARTICLE);
+	particle.setTexture(m_small_asteroid_texture);
+	particle.setOrigin(particle.getLocalBounds().width/2, particle.getLocalBounds().height/2);
+	particle.setPosition(position);	
+	particle.setScale(0.1f, 0.1f);
+	// set velocities to all directions in a circle
+	double angle = 0;
+	for (int i = 0; i < M_NUM_PARTICLES_PER_EXPLOSION; ++i)
+	{
+		angle = i/float(M_NUM_PARTICLES_PER_EXPLOSION)*2*3.141569265;
+		particle.setVelocity(sf::Vector2f(std::cos(angle)*M_PARTICLES_SPEED, std::sin(angle)*M_PARTICLES_SPEED));
+		particle.m_life_clock.restart();
+		m_new_asteroids.push(particle);
+	}
 }

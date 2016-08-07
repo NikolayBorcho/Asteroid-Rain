@@ -356,16 +356,18 @@ void App::UpdateAsteroids(double delta_time)
 		{
 			if (it->getType() == Asteroid::ASTEROID_TYPE::SMALL)
 			{
+				m_asteroids_control.CreateExplosion(it->getPosition());
 				it->isDead = true;
 				m_score++;
 			}
 			else if (it->getType() == Asteroid::ASTEROID_TYPE::SUPER)
 			{
+				m_asteroids_control.CreateExplosion(it->getPosition());
 				it->isDead = true;
 				m_asteroids_control.SplitAsteroid(*it);
 			}
 		}
-		else if (it->getPosition().y > m_window.getSize().y)	// reached bottom of screen
+		else if ((it->getPosition().y > m_window.getSize().y) && (it->getType() != Asteroid::ASTEROID_TYPE::PARTICLE))	// reached bottom of screen
 		{
 			it->isDead = true;
 			m_flash_timer.restart();	// flash screen red
