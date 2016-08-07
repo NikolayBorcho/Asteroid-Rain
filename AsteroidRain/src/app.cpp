@@ -4,8 +4,7 @@
 
 /*
 	TO ADD:
-	asteroids generation
-	flash red when lose life
+	asteroids various speeds
 	super asteroids and split
 
 	ISSUES:
@@ -25,7 +24,7 @@ void App::RunApp()
 	m_font.loadFromFile("res/BebasNeue.otf");
 	
 	// create the main window
-	m_window.create(sf::VideoMode(1024, 576), "Asteroid Rain", sf::Style::Titlebar | sf::Style::Close);
+	m_window.create(sf::VideoMode(1024, 576), "AsteroidsControl Rain", sf::Style::Titlebar | sf::Style::Close);
 
 	// fps text
 	m_fps_text.setFont(m_font);
@@ -160,6 +159,13 @@ void App::InitState()
 		m_game_timer_text.setPosition(m_window.getSize().x - 160.f, m_window.getSize().y - 40.f);
 		m_game_timer_text.setString("Time left: " + to_string(60,std::dec));
 		
+
+		m_high_score_text.setFont(m_font);
+		m_high_score_text.setColor(sf::Color::Red);
+		m_high_score_text.setString("High Score: "+ to_string<int>(m_high_score, std::dec));
+		m_high_score_text.setPosition(10.f, m_window.getSize().y - 120.f);
+		
+
 		m_asteroids.Init(&m_window);
 		}
 		break;
@@ -175,13 +181,7 @@ void App::InitState()
 		m_score_text.setString("Score: " + to_string<int>(m_score, std::dec));
 		m_score_text.setPosition(m_window.getSize().x/2 - m_score_text.getLocalBounds().width/2, m_window.getSize().y/8 - m_score_text.getLocalBounds().height/2);
 		
-
 		// high score
-		if (m_score > m_high_score)
-		{
-			m_high_score = m_score;
-		}
-		m_high_score_text.setFont(m_font);
 		m_high_score_text.setColor(sf::Color::Blue);
 		m_high_score_text.setString("High Score: "+ to_string<int>(m_high_score, std::dec));
 		m_high_score_text.setPosition(m_window.getSize().x/2 - m_high_score_text.getLocalBounds().width/2, m_window.getSize().y/4 - m_high_score_text.getLocalBounds().height/2);
@@ -214,7 +214,7 @@ void App::UpdateState(double delta_time)
 		
 		// itearate asteroids
 		m_asteroids.Update(delta_time);
-		for (std::vector<sf::Sprite>::iterator it = m_asteroids.m_asteroids.begin(); it != m_asteroids.m_asteroids.end(); /*++it*/)
+		for (std::vector<Asteroid>::iterator it = m_asteroids.m_asteroids.begin(); it != m_asteroids.m_asteroids.end(); /*++it*/)
 		{
 			if (MouseClickedSprite(*it))
 			{
@@ -230,6 +230,15 @@ void App::UpdateState(double delta_time)
 			else
 				it++;
 		}
+
+		// high score
+		if (m_score > m_high_score)
+		{
+			m_high_score = m_score;
+		}
+		m_score_text.setString("Score: " + to_string<int>(m_score,std::dec));	
+		m_lives_text.setString("Lives: " + to_string<int>(m_lives,std::dec));
+		m_high_score_text.setString("High Score: "+ to_string<int>(m_high_score, std::dec));
 
 		break;
 
@@ -257,10 +266,9 @@ void App::RenderState()
 	case GAME_PLAY:
 		m_asteroids.Render();
 		m_window.draw(m_game_timer_text);
-		m_score_text.setString("Score: " + to_string<int>(m_score,std::dec));
 		m_window.draw(m_score_text);
-		m_lives_text.setString("Lives: " + to_string<int>(m_lives,std::dec));
 		m_window.draw(m_lives_text);
+		m_window.draw(m_high_score_text);
 
 		if (m_flash_timer.getElapsedTime() < sf::milliseconds(1000))
 		{

@@ -9,17 +9,11 @@ class Asteroid : public sf::Sprite
 {
 public:
 	Asteroid();
-	~Asteroid();
-	void Init(sf::RenderWindow* window);
-	void Update(double delta_time);
-	void Render();
-	void CleanUp();
-	std::vector<sf::Sprite> m_asteroids;
+	void setSpeed(float speed) { m_speed = speed; }
+	float getSpeed() { return m_speed; }
+
 private:
-	sf::Sprite m_small_asteroid;
-	sf::Texture m_small_asteroid_texture;
-	sf::RenderWindow* m_window;
-	sf::Clock m_timer;
+	float m_speed;
 };
 
 #endif

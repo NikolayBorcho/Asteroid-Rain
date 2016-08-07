@@ -1,4 +1,4 @@
-// Asteroid Rain Game as defined by Mediatonic
+// AsteroidsControlsControl Rain Game as defined by Mediatonic
 // Using the SFML C++ library
 // ...
 // 2016

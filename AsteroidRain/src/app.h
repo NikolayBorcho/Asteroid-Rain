@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "asteroid.h"
+#include "asteroids_control.h"
 
 // App class hadnling the game loop and all application objects
 class App
@@ -57,7 +57,7 @@ private:
 	static const int M_TIME_LIMIT = 20;
 
 	// asteroids
-	Asteroid m_asteroids;
+	AsteroidsControl m_asteroids;
 };
 
 #endif

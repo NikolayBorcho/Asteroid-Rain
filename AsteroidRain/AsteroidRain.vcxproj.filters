@@ -21,6 +21,9 @@
     <ClCompile Include="src\app.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\asteroids_control.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\asteroid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -30,6 +33,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\to_string.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\asteroids_control.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\asteroid.h">

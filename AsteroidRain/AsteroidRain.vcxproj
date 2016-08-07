@@ -84,11 +84,13 @@
   <ItemGroup>
     <ClCompile Include="src\app.cpp" />
     <ClCompile Include="src\asteroid.cpp" />
+    <ClCompile Include="src\asteroids_control.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\app.h" />
     <ClInclude Include="src\asteroid.h" />
+    <ClInclude Include="src\asteroids_control.h" />
     <ClInclude Include="src\to_string.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
