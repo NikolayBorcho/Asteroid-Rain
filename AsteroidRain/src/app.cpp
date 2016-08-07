@@ -3,6 +3,11 @@
 
 
 /*
+	TO ADD:
+	asteroids generation
+	flash red when lose life
+	super asteroids and split
+
 	ISSUES:
 	
 */
@@ -143,14 +148,19 @@ void App::InitState()
 		m_score_text.setPosition(10.f, m_window.getSize().y - 80.f);
 		m_score_text.setString("Score: ");
 
+		// flash
+		m_flash.setSize(sf::Vector2f(m_window.getSize()));
+		m_flash.setPosition(0.f, 0.f);
+		m_flash.setFillColor(sf::Color(255, 0, 0, 255));
 
+		// game timer
 		m_game_timer.restart();
 		m_game_timer_text.setFont(m_font);
 		m_game_timer_text.setColor(sf::Color::Red);
 		m_game_timer_text.setPosition(m_window.getSize().x - 160.f, m_window.getSize().y - 40.f);
 		m_game_timer_text.setString("Time left: " + to_string(60,std::dec));
 		
-		m_asteroids.Init();
+		m_asteroids.Init(&m_window);
 		}
 		break;
 
@@ -214,6 +224,7 @@ void App::UpdateState(double delta_time)
 			else if (it->getPosition().y > m_window.getSize().y)
 			{
 				it = m_asteroids.m_asteroids.erase(it);
+				m_flash_timer.restart();
 				m_lives--;
 			}
 			else
@@ -244,13 +255,18 @@ void App::RenderState()
 		m_window.draw(m_start_game_button);
 		break;
 	case GAME_PLAY:
-		m_asteroids.Render(&m_window);
+		m_asteroids.Render();
 		m_window.draw(m_game_timer_text);
 		m_score_text.setString("Score: " + to_string<int>(m_score,std::dec));
 		m_window.draw(m_score_text);
 		m_lives_text.setString("Lives: " + to_string<int>(m_lives,std::dec));
 		m_window.draw(m_lives_text);
 
+		if (m_flash_timer.getElapsedTime() < sf::milliseconds(1000))
+		{
+			m_flash.setFillColor(sf::Color(255, 0, 0, 255 - 255*(m_flash_timer.getElapsedTime().asMilliseconds()/float(1000)) ));
+			m_window.draw(m_flash);
+		}
 		break;
 
 	case GAME_OVER:

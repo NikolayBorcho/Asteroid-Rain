@@ -5,20 +5,26 @@ Asteroid::Asteroid()
 {
 }
 
-void Asteroid::Init()
+void Asteroid::Init(sf::RenderWindow* window)
 {
+	m_window = window;
 	// asteroids
 	m_small_asteroid_texture.loadFromFile("res/small_asteroid.png");
-	sf::Sprite asteroid;
-	asteroid.setTexture(m_small_asteroid_texture);
-	asteroid.setPosition(100, 100);
-	m_asteroids.push_back(asteroid);
-	asteroid.setPosition(300, 120);
-	m_asteroids.push_back(asteroid);
+	m_small_asteroid.setTexture(m_small_asteroid_texture);
+	srand(time(NULL));
+	m_timer.restart();
 }
 
 void Asteroid::Update(double delta_time)
 {
+	// generate new asteroids
+	if (m_timer.getElapsedTime() > sf::milliseconds(900) )
+	{
+		m_small_asteroid.setPosition(rand()%(m_window->getSize().x - int(m_small_asteroid.getLocalBounds().width)), -m_small_asteroid.getLocalBounds().height);
+		m_asteroids.push_back(m_small_asteroid);
+		m_timer.restart();
+	}
+
 	// itearate asteroids
 	for (std::vector<sf::Sprite>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); ++it)
 	{
@@ -26,16 +32,23 @@ void Asteroid::Update(double delta_time)
 	}
 }
 
-void Asteroid::Render(sf::RenderWindow* window)
+void Asteroid::Render()
 {
 	// draw asteroids
 	for (std::vector<sf::Sprite>::iterator it = m_asteroids.begin(); it != m_asteroids.end(); ++it)
 	{
-		window->draw(*it);
+		m_window->draw(*it);
 	}
 }
 
 void Asteroid::CleanUp()
 {
+	m_window = 0;
+	m_asteroids.clear();
+}
+
+Asteroid::~Asteroid()
+{
+	m_window = 0;
 	m_asteroids.clear();
 }

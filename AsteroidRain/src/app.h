@@ -31,6 +31,9 @@ private:
 	sf::Clock m_game_timer;
 	
 
+	sf::Clock m_flash_timer;
+	sf::RectangleShape m_flash;
+
 	int m_lives;
 	int m_score;
 	sf::Text m_score_text;
@@ -51,7 +54,7 @@ private:
 
 	int m_fps;
 	sf::Text m_fps_text;
-	static const int M_TIME_LIMIT = 5;
+	static const int M_TIME_LIMIT = 20;
 
 	// asteroids
 	Asteroid m_asteroids;
