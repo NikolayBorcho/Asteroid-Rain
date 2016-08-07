@@ -125,7 +125,12 @@ void App::InitState()
 		m_start_game_button_texture.loadFromFile("res/start_game_button.png");
 		m_start_game_button.setTexture(m_start_game_button_texture);
 		m_start_game_button.setPosition(m_window.getSize().x/2 - m_start_game_button.getLocalBounds().width/2, m_window.getSize().y/2 - m_start_game_button.getLocalBounds().height/2);
-		
+		// game title text
+		m_game_title_text.setFont(m_font);
+		m_game_title_text.setColor(sf::Color::White);
+		m_game_title_text.setString("Asteroid Rain - Nikolay Panayotov");
+		m_game_title_text.setPosition(m_window.getSize().x/2 - m_game_title_text.getLocalBounds().width/2, m_window.getSize().y/8 - m_game_title_text.getLocalBounds().height/2);
+			
 		// intial game properties
 		m_high_score = 0;
 		break;
@@ -175,15 +180,21 @@ void App::InitState()
 		m_play_again_button.setTexture(m_play_again_button_texture);
 		m_play_again_button.setPosition(m_window.getSize().x/2 - m_play_again_button.getLocalBounds().width/2, m_window.getSize().y/2 - m_play_again_button.getLocalBounds().height/2);
 
+		// game over text
+		m_game_over_text.setFont(m_font);
+		m_game_over_text.setColor(sf::Color::White);
+		m_game_over_text.setString("Game Over");
+		m_game_over_text.setPosition(m_window.getSize().x/2 - m_game_over_text.getLocalBounds().width/2, m_window.getSize().y/8 - m_game_over_text.getLocalBounds().height/2);	
+
 		// current score
 		m_score_text.setColor(sf::Color::White);
 		m_score_text.setString("Score: " + to_string<int>(m_score, std::dec));
-		m_score_text.setPosition(m_window.getSize().x/2 - m_score_text.getLocalBounds().width/2, m_window.getSize().y/8 - m_score_text.getLocalBounds().height/2);
+		m_score_text.setPosition(m_window.getSize().x/2 - m_score_text.getLocalBounds().width/2, m_window.getSize().y*(3.f/4) - m_score_text.getLocalBounds().height/2);
 		
 		// high score
 		m_high_score_text.setColor(sf::Color::White);
 		m_high_score_text.setString("High Score: "+ to_string<int>(m_high_score, std::dec));
-		m_high_score_text.setPosition(m_window.getSize().x/2 - m_high_score_text.getLocalBounds().width/2, m_window.getSize().y/4 - m_high_score_text.getLocalBounds().height/2);		
+		m_high_score_text.setPosition(m_window.getSize().x/2 - m_high_score_text.getLocalBounds().width/2, m_window.getSize().y*(5.f/6) - m_high_score_text.getLocalBounds().height/2);		
 		break;
 	}
 }
@@ -240,6 +251,7 @@ void App::RenderState()
 	{
 	case GAME_INTRO:
 		m_window.draw(m_start_game_button);
+		m_window.draw(m_game_title_text);
 		break;
 
 	case GAME_PLAY:
@@ -258,6 +270,7 @@ void App::RenderState()
 		m_window.draw(m_play_again_button);
 		m_window.draw(m_high_score_text);
 		m_window.draw(m_score_text);
+		m_window.draw(m_game_over_text);
 		break;
 	}
 
