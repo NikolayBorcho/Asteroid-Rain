@@ -1,0 +1,15 @@
+BebasNeue.otf:
+Ryoichi Tsunekawa, 2010
+
+flash.wav: 
+wildweasel
+August 15th, 2007
+https://www.freesound.org/people/wildweasel/sounds/39036/
+
+explosion.wav: 
+smcameron
+April 7th, 2008
+https://www.freesound.org/people/smcameron/sounds/51464/
+
+
+Links last accessed: 7 August 2016

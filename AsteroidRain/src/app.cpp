@@ -145,6 +145,12 @@ void App::InitState()
 		m_flash.setPosition(0.f, 0.f);
 		m_flash.setFillColor(sf::Color(255, 0, 0, 0));
 
+		// Load Sounds
+		m_explosion_sound_buffer.loadFromFile("res/explosion.wav");
+		m_explosion_sound.setBuffer(m_explosion_sound_buffer);
+		m_flash_sound_buffer.loadFromFile("res/flash.wav");
+		m_flash_sound.setBuffer(m_flash_sound_buffer);
+
 		// Text Interfaces Init
 		// player lives setup
 		m_lives = 5;
@@ -356,12 +362,14 @@ void App::UpdateAsteroids(double delta_time)
 		{
 			if (it->getType() == Asteroid::ASTEROID_TYPE::SMALL)
 			{
+				m_explosion_sound.play();
 				m_asteroids_control.CreateExplosion(it->getPosition());
 				it->isDead = true;
 				m_score++;
 			}
 			else if (it->getType() == Asteroid::ASTEROID_TYPE::SUPER)
 			{
+				m_explosion_sound.play();
 				m_asteroids_control.CreateExplosion(it->getPosition());
 				it->isDead = true;
 				m_asteroids_control.SplitAsteroid(*it);
@@ -369,6 +377,7 @@ void App::UpdateAsteroids(double delta_time)
 		}
 		else if ((it->getPosition().y > m_window.getSize().y) && (it->getType() != Asteroid::ASTEROID_TYPE::PARTICLE))	// reached bottom of screen
 		{
+			m_flash_sound.play();
 			it->isDead = true;
 			m_flash_timer.restart();	// flash screen red
 			m_lives--;

@@ -4,6 +4,7 @@
 // Nikolay Panayotov, 2016
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "asteroids_control.h"
 
 // App class handling the game loop and all application objects
@@ -74,6 +75,13 @@ private:
 
 	// Asteroids
 	AsteroidsControl m_asteroids_control;
+
+	// Sounds
+	sf::Sound m_explosion_sound;
+	sf::SoundBuffer m_explosion_sound_buffer;
+
+	sf::Sound m_flash_sound;
+	sf::SoundBuffer m_flash_sound_buffer;
 
 	// ---
 	// CONSTANTS
