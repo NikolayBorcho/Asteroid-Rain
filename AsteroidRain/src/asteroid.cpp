@@ -3,5 +3,6 @@
 
 Asteroid::Asteroid()
 {
+	isDead = false;
 }
 

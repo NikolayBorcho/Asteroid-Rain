@@ -1,17 +1,6 @@
 #include "app.h"
 #include "to_string.h"
 
-
-/*
-	TO ADD:
-	asteroids various speeds
-	super asteroids and split
-
-	ISSUES:
-	
-*/
-
-
 App::App()
 {
 }
@@ -214,21 +203,28 @@ void App::UpdateState(double delta_time)
 		
 		// itearate asteroids
 		m_asteroids.Update(delta_time);
-		for (std::vector<Asteroid>::iterator it = m_asteroids.m_asteroids.begin(); it != m_asteroids.m_asteroids.end(); /*++it*/)
+		for (std::vector<Asteroid>::iterator it = m_asteroids.m_asteroids.begin(); it != m_asteroids.m_asteroids.end(); ++it)
 		{
 			if (MouseClickedSprite(*it))
 			{
-				it = m_asteroids.m_asteroids.erase(it);
-				m_score++;
+				if (it->getType() == Asteroid::ASTEROID_TYPE::SMALL)
+				{
+					it->isDead = true;//it = m_asteroids.m_asteroids.erase(it);
+					m_score++;
+				}
+				else if (it->getType() == Asteroid::ASTEROID_TYPE::SUPER)
+				{
+					it->isDead = true;//it = m_asteroids.m_asteroids.erase(it);
+				}
 			}
 			else if (it->getPosition().y > m_window.getSize().y)
 			{
-				it = m_asteroids.m_asteroids.erase(it);
+				it->isDead = true;//it = m_asteroids.m_asteroids.erase(it);
 				m_flash_timer.restart();
 				m_lives--;
 			}
-			else
-				it++;
+			//else
+			//	it++;
 		}
 
 		// high score

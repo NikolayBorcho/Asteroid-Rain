@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <queue>
 #include "asteroid.h"
 
 // Store and handle the asteroids in the game
@@ -17,10 +18,11 @@ public:
 	void CleanUp();
 	std::vector<Asteroid> m_asteroids;
 private:
-	Asteroid m_small_asteroid;
 	sf::Texture m_small_asteroid_texture;
+	sf::Texture m_super_asteroid_texture;
 	sf::RenderWindow* m_window;
 	sf::Clock m_timer;
+	std::queue<Asteroid> m_new_asteroids;
 };
 
 #endif
