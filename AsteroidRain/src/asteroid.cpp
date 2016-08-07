@@ -34,3 +34,8 @@ void Asteroid::Render(sf::RenderWindow* window)
 		window->draw(*it);
 	}
 }
+
+void Asteroid::CleanUp()
+{
+	m_asteroids.clear();
+}

@@ -1,6 +1,13 @@
 #include "app.h"
 #include "to_string.h"
 
+
+/*
+	ISSUES:
+	
+*/
+
+
 App::App()
 {
 }
@@ -13,19 +20,12 @@ void App::RunApp()
 	m_font.loadFromFile("res/BebasNeue.otf");
 	
 	// create the main window
-	m_window.create(sf::VideoMode(1024, 576), "Asteroid Rain");
+	m_window.create(sf::VideoMode(1024, 576), "Asteroid Rain", sf::Style::Titlebar | sf::Style::Close);
 
 	// fps text
 	m_fps_text.setFont(m_font);
 	m_fps_text.setColor(sf::Color::Black);
 	m_fps_text.setPosition(m_window.getSize().x - 100.f, 10.f);
-	
-	// high score
-	m_high_score = 0;
-	m_high_score_text.setFont(m_font);
-	m_high_score_text.setColor(sf::Color::Blue);
-	m_high_score_text.setPosition(m_window.getSize().x/2, m_window.getSize().y/2);
-	m_high_score_text.setString("High Score: ");
 	
 	// game time
 	sf::Clock frame_clock;
@@ -104,7 +104,7 @@ void App::ExitState()
 
 		break;
 	case GAME_PLAY:
-
+		m_asteroids.CleanUp();
 		break;
 
 	case GAME_OVER:
@@ -121,10 +121,11 @@ void App::InitState()
 	{
 	case GAME_INTRO:
 		// sprites
-		m_start_button_texture.loadFromFile("res/start_button.png");
-		m_start_button.setTexture(m_start_button_texture);
-		m_start_button.setPosition(m_window.getSize().x/2 - m_start_button.getLocalBounds().width/2, m_window.getSize().y/2 - m_start_button.getLocalBounds().height/2);
-
+		m_start_game_button_texture.loadFromFile("res/start_game_button.png");
+		m_start_game_button.setTexture(m_start_game_button_texture);
+		m_start_game_button.setPosition(m_window.getSize().x/2 - m_start_game_button.getLocalBounds().width/2, m_window.getSize().y/2 - m_start_game_button.getLocalBounds().height/2);
+		// high score
+		m_high_score = 0;
 		break;
 	case GAME_PLAY:
 		// timer
@@ -154,7 +155,27 @@ void App::InitState()
 		break;
 
 	case GAME_OVER:
+		// sprites
+		m_play_again_button_texture.loadFromFile("res/play_again_button.png");
+		m_play_again_button.setTexture(m_play_again_button_texture);
+		m_play_again_button.setPosition(m_window.getSize().x/2 - m_play_again_button.getLocalBounds().width/2, m_window.getSize().y/2 - m_play_again_button.getLocalBounds().height/2);
 
+		// current score
+		m_score_text.setColor(sf::Color::Blue);
+		m_score_text.setString("Score: " + to_string<int>(m_score, std::dec));
+		m_score_text.setPosition(m_window.getSize().x/2 - m_score_text.getLocalBounds().width/2, m_window.getSize().y/8 - m_score_text.getLocalBounds().height/2);
+		
+
+		// high score
+		if (m_score > m_high_score)
+		{
+			m_high_score = m_score;
+		}
+		m_high_score_text.setFont(m_font);
+		m_high_score_text.setColor(sf::Color::Blue);
+		m_high_score_text.setString("High Score: "+ to_string<int>(m_high_score, std::dec));
+		m_high_score_text.setPosition(m_window.getSize().x/2 - m_high_score_text.getLocalBounds().width/2, m_window.getSize().y/4 - m_high_score_text.getLocalBounds().height/2);
+		
 		break;
 	}
 }
@@ -166,17 +187,19 @@ void App::UpdateState(double delta_time)
 	switch (m_current_game_state)
 	{
 	case GAME_INTRO:
-		if (MouseClickedSprite(m_start_button))
+		if (MouseClickedSprite(m_start_game_button))
 		{
 			ChangeState(GAME_PLAY);
 		}
 		break;
 	case GAME_PLAY:
 		// stopwatch countdown
-		m_game_timer_text.setString("Time left: " + to_string<int>(10 - m_game_timer.getElapsedTime().asSeconds(),std::dec));
-		if (m_game_timer.getElapsedTime().asSeconds() >= 10)
+		m_game_timer_text.setString("Time left: " + to_string<int>(M_TIME_LIMIT - m_game_timer.getElapsedTime().asSeconds(),std::dec));
+		// end game conditions
+		if ((m_game_timer.getElapsedTime().asSeconds() >= M_TIME_LIMIT)
+			|| (m_lives <= 0))
 		{
-			ChangeState(GAME_INTRO);
+			ChangeState(GAME_OVER);
 		}
 		
 		// itearate asteroids
@@ -196,10 +219,14 @@ void App::UpdateState(double delta_time)
 			else
 				it++;
 		}
+
 		break;
 
 	case GAME_OVER:
-
+		if (MouseClickedSprite(m_play_again_button))
+		{
+			ChangeState(GAME_PLAY);
+		}
 		break;
 	}
 }
@@ -214,7 +241,7 @@ void App::RenderState()
 	switch (m_current_game_state)
 	{
 	case GAME_INTRO:
-		m_window.draw(m_start_button);
+		m_window.draw(m_start_game_button);
 		break;
 	case GAME_PLAY:
 		m_asteroids.Render(&m_window);
@@ -227,7 +254,9 @@ void App::RenderState()
 		break;
 
 	case GAME_OVER:
+		m_window.draw(m_play_again_button);
 		m_window.draw(m_high_score_text);
+		m_window.draw(m_score_text);
 		break;
 	}
 

@@ -44,10 +44,14 @@ private:
 	
 	int m_high_score;
 	bool m_mouse_clicked;
-	sf::Sprite m_start_button;
-	sf::Texture m_start_button_texture;
+	sf::Sprite m_start_game_button;
+	sf::Texture m_start_game_button_texture;
+	sf::Sprite m_play_again_button;
+	sf::Texture m_play_again_button_texture;
+
 	int m_fps;
 	sf::Text m_fps_text;
+	static const int M_TIME_LIMIT = 5;
 
 	// asteroids
 	Asteroid m_asteroids;

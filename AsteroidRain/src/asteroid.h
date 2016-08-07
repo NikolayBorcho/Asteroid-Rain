@@ -12,6 +12,7 @@ public:
 	void Init();
 	void Update(double delta_time);
 	void Render(sf::RenderWindow* window);
+	void CleanUp();
 	std::vector<sf::Sprite> m_asteroids;
 private:
 
