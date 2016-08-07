@@ -5,8 +5,11 @@
 #include <sstream>
 #include <iostream>
 
-// from:
+// Helper function for converting a number to a string.
+// Last edited by Andreas Masur; July 24th, 2005 at 12:03 PM.
+// sourced from:
 // http://forums.codeguru.com/showthread.php?231056-C-String-How-to-convert-a-numeric-type-to-a-string&s=
+// Link last accessed: 7 August 2016
 
 template <class T>
 std::string to_string(T t, std::ios_base & (*f)(std::ios_base&))

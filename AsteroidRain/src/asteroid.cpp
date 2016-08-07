@@ -1,5 +1,6 @@
 #include "asteroid.h"
-#include "to_string.h"
+
+// Nikolay Panayotov, 2016
 
 Asteroid::Asteroid()
 {

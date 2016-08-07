@@ -1,10 +1,11 @@
 #ifndef _ASTEROID_
 #define _ASTEROID_
 
-#include <SFML/Graphics.hpp>
-#include <vector>
+// Nikolay Panayotov, 2016
 
-// Store and handle the asteroids in the game
+#include <SFML/Graphics.hpp>
+
+// Represents an asteroid sprite. Has a type and speed, as well as an isDead flag.
 class Asteroid : public sf::Sprite
 {
 public:
@@ -12,14 +13,17 @@ public:
 
 	enum ASTEROID_TYPE {SMALL, SUPER};
 
-	void setSpeed(float speed) { m_speed = speed; }
-	float getSpeed() { return m_speed; }
+	bool isDead;
+
+	// getters and setters
 	void setType(ASTEROID_TYPE type) { m_type = type; }
 	ASTEROID_TYPE getType() { return m_type; }
-	bool isDead;
+	void setSpeed(float speed) { m_speed = speed; }
+	float getSpeed() { return m_speed; }
+	
 private:
-	float m_speed;
 	ASTEROID_TYPE m_type;
+	float m_speed;
 };
 
 #endif
